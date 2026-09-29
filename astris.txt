@@ -1,0 +1,69 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local executorName = "Unknown"
+
+pcall(function()
+    if identifyexecutor then
+        local name = identifyexecutor()
+        if type(name) == "string" then
+            executorName = name
+        end
+    elseif getexecutorname then
+        local name = getexecutorname()
+        if type(name) == "string" then
+            executorName = name
+        end
+    end
+end)
+
+local executor = executorName:lower()
+
+if executor:find("xeno", 1, true) or executor:find("solara", 1, true) then
+    LocalPlayer:Kick("Fuck off external user")
+    return
+end
+
+local loaders = {
+    [16205713724] = {
+        name = "Slayers 2",
+        url = "https://oblivion.menu/astris/slayer2"
+    },
+
+    [124216119978534] = {
+        name = "Ride A Pet",
+        url = "https://oblivion.menu/astris/rideapet"
+    },
+
+    [107778070777162] = {
+        name = "Steal An Egg",
+        url = "https://oblivion.menu/astris/stealanegg"
+    },
+
+    [142823291] = {
+        name = "Murder Mystery 2",
+        url = "https://oblivion.menu/astris/mm2"
+    },
+
+    [17625359962] = {
+        name = "RIVALS",
+        url = "https://oblivion.menu/astris/rivals"
+    }
+}
+
+local gameData = loaders[game.PlaceId]
+
+if not gameData then
+    warn("Unsupported game. PlaceId:", game.PlaceId)
+    return
+end
+
+print("Loading:", gameData.name)
+
+local success, result = pcall(function()
+    return loadstring(game:HttpGet(gameData.url))()
+end)
+
+if not success then
+    warn("Failed to load " .. gameData.name .. ": " .. tostring(result))
+end
